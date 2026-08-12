@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Marine Connect – Homescreen</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+CiAgPHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiByeD0iMTQiIGZpbGw9IiMwZDI3NDAiLz4KICA8cGF0aCBkPSJNMzIgMTR2OE0yNiAyMGgxMiIgc3Ryb2tlPSIjZWFmM2ZhIiBzdHJva2Utd2lkdGg9IjMiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgogIDxjaXJjbGUgY3g9IjMyIiBjeT0iMTciIHI9IjQuMiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZWFmM2ZhIiBzdHJva2Utd2lkdGg9IjMiLz4KICA8cGF0aCBkPSJNMzIgMjJ2MjQiIHN0cm9rZT0iI2VhZjNmYSIgc3Ryb2tlLXdpZHRoPSIzIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KICA8cGF0aCBkPSJNMjAgMzRjMCA4IDUuNSAxNCAxMiAxNHMxMi02IDEyLTE0IiBzdHJva2U9IiNlYWYzZmEiIHN0cm9rZS13aWR0aD0iMyIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBmaWxsPSJub25lIi8+CiAgPHBhdGggZD0iTTIwIDM0aC0zTTQ3IDM0aC0zIiBzdHJva2U9IiNlYWYzZmEiIHN0cm9rZS13aWR0aD0iMyIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+Cjwvc3ZnPgo=">
 <style>
   :root{
     --navy:#0d2740;
@@ -69,6 +70,30 @@
     width:auto;
     filter:drop-shadow(0 4px 10px rgba(13,39,64,0.10));
   }
+  .status-bar{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-size:12.5px;
+    color:var(--ink-dim);
+    margin-top:14px;
+    padding:6px 14px;
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:999px;
+    box-shadow:0 2px 6px rgba(13,39,64,0.05);
+  }
+  .status-bar .dot{
+    width:7px;height:7px;
+    border-radius:50%;
+    background:#2f9e5c;
+    box-shadow:0 0 0 3px rgba(47,158,92,0.15);
+  }
+  .status-bar .divider{
+    width:1px;height:12px;
+    background:var(--line);
+  }
+
   .eyebrow{
     letter-spacing:0.22em;
     text-transform:uppercase;
@@ -252,8 +277,15 @@
     <span class="eyebrow">Tool-Übersicht</span>
   </header>
 
-  <h1 class="title">Willkommen zurück</h1>
+  <h1 class="title" id="greeting">Willkommen zurück</h1>
   <p class="subtitle">Wähle einen Bereich aus, um direkt zum jeweiligen Tool zu gelangen.</p>
+
+  <div class="status-bar">
+    <span class="dot" aria-hidden="true"></span>
+    <span id="status-date"></span>
+    <span class="divider" aria-hidden="true"></span>
+    <span id="status-time"></span>
+  </div>
 
   <section class="block">
     <div class="block-header">
@@ -361,6 +393,35 @@
 
   <footer>Marine Connect · internes Tool</footer>
 </div>
+
+<script>
+  (function(){
+    var dateEl = document.getElementById('status-date');
+    var timeEl = document.getElementById('status-time');
+    var greetEl = document.getElementById('greeting');
+
+    var weekdays = ['Sonntag','Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag'];
+    var months = ['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
+
+    function pad(n){ return n < 10 ? '0' + n : n; }
+
+    function update(){
+      var now = new Date();
+      dateEl.textContent = weekdays[now.getDay()] + ', ' + now.getDate() + '. ' + months[now.getMonth()] + ' ' + now.getFullYear();
+      timeEl.textContent = pad(now.getHours()) + ':' + pad(now.getMinutes()) + ' Uhr';
+
+      var hour = now.getHours();
+      var greeting = 'Willkommen zurück';
+      if (hour < 11) greeting = 'Guten Morgen';
+      else if (hour < 18) greeting = 'Guten Tag';
+      else greeting = 'Guten Abend';
+      greetEl.textContent = greeting;
+    }
+
+    update();
+    setInterval(update, 30000);
+  })();
+</script>
 
 </body>
 </html>
